@@ -1,0 +1,17 @@
+namespace flux
+	include 'flux.lm'
+end
+
+include 'influxql.lm'
+
+parse P: program [stdin]
+
+if ( !P ) {
+	print "[error]
+	exit( 1 )
+}
+
+for R: regex_lit in P {
+	print "[^R]
+}
+

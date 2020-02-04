@@ -1,4 +1,5 @@
 lex 
+	ignore / '#' [^\n]* '\n' /
 	ignore /[ \t\n]+/
 
 	literal
@@ -20,6 +21,7 @@ lex
 		`AND `OR
 		`+ `- `* `/ `% `& `| `^
 		`= `!= `<> `< `<= `> `>= 
+		`=~
 		`. `: `( `) `, `;
 
 	# Not sure if these are keywords, or just identifiers with a restriction.
@@ -37,7 +39,9 @@ lex
 	token identifier
 		/ unquoted_identifier | quoted_identifier /
 	
-	token int_lit          / ( "1" .. "9" ) digit * /
+	# FIXME: int_lit does not allow "0" (both docs.influxdata.com and README.md).
+	# FIXME: docs.influxdata.com does not include +/-
+	token int_lit          / ( "0" | ( "1" .. "9" ) digit* ) /
 
 	token float_lit        / int_lit "." int_lit /
 
@@ -126,20 +130,26 @@ def select_stmt
 #
 # Expressions
 #
+# FIXME: missing ~=
 def binary_op
 	[`+] | [`-] | [`*] | [`/] | [`%] | [`&] | [`|] | [`^]
 |	[`AND] | [`OR] | [`=] | [`!=] | [`<>] | [`<] | [`<=] | [`>] | [`>=] 
+|	[`=~]
 
 def expr
-	[expr binary_op unary_expr]
-|	[unary_expr]
+	[expr binary_op unary_op unary_expr]
+|	[unary_op unary_expr]
 
 def call_args
 	[call_args `, expr]
 |	[expr]
 
+def unary_op
+	[`-] | [`+] | []
+
 # seems to be missing function call.
 # DOC FIXME: spec seems to be missing function call.
+# FIXME: does not allow +/-
 def unary_expr
 	[`( expr `)]
 |	[identifier `( call_args? `)]
@@ -167,8 +177,10 @@ def back_ref
 def db_name
 	[identifier]
 
+# FIXME: does not allow *
 def dimension
 	[expr]
+|	[`*]
 
 def dimensions
 	[dimensions `, dimension]
@@ -265,16 +277,3 @@ def item
 
 def program
 	[item*]
-
-parse P: program [stdin]
-
-if ( !P ) {
-	print "[error]
-	exit( 1 )
-}
-
-for L: duration_lit in P {
-	print "[^L]
-}
-
-

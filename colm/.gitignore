@@ -1,4 +1,4 @@
-/flux.c
-/flux
-/influxql.c
-/influxql
+/testflux.c
+/testflux
+/iql2flux.c
+/iql2flux
