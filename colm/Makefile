@@ -1,7 +1,4 @@
-all: testflux iql2flux
+all: ifql2flux
 
-testflux: testflux.lm flux.lm
-	colm -o $@ $<
-
-iql2flux: iql2flux.lm flux.lm influxql.lm
+ifql2flux: ifql2flux.lm flux.lm influxql.lm
 	colm -o $@ $<
