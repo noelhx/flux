@@ -29,9 +29,9 @@ void flux_free(void *);
 // flux_ast_pkg_t is the AST representation of a flux query as a package.
 struct flux_ast_pkg_t;
 
-// flux_parse will take in a string and return the AST representation
-// of the query.
-struct flux_ast_pkg_t *flux_parse(const char *);
+// flux_parse will take in a file name string and a source string then
+// return the AST representation of the query.
+struct flux_ast_pkg_t *flux_parse(const char *, const char *);
 
 // flux_merge_ast_pkgs merges the files of a given input AST package into the file vector of a
 // given output AST package. This function borrows the packages, but it does not own them. The
