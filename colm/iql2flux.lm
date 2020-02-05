@@ -11,7 +11,51 @@ if ( !P ) {
 	exit( 1 )
 }
 
-for R: regex_lit in P {
-	print "[^R]
+void normalize_conjunctions( LE: ref<expr> )
+{
+	Modified: bool = true
+	while ( Modified ) {
+		Modified = false
+		for SLE: conjunction_expression in LE {
+			if match SLE
+				[ `( CE: conjunction_expression `) ] 
+			{
+				SLE = CE
+				Modified = true
+			}
+			else if match SLE
+				[ LE2: conjunction_expression `AND `( CE: conjunction_expression `) ] 
+			{
+				# Place LE2 at the end of the CE list.
+				for Tail: conjunction_expression in CE {
+					if match Tail [Last: comparison_expression] {
+						Tail = cons conjunction_expression " [LE2] AND [Last] "
+						break
+					}
+				}
+
+				SLE = CE
+				Modified = true
+			}
+		}
+	}
+}
+
+#
+# 1. Pull and apply the time constraint. Replace with true. Expect conjunction
+# 2. Remaining where clause items.
+# 3. Apply Group By.
+# 4. Select Expressions
+#
+for SS: select_stmt in P {
+	WC: where_clause = where_clause in SS
+	if WC {
+		Expr: expr = WC.expr
+		normalize_conjunctions( Expr )
+
+		SS.opt_where_clause = cons opt_where_clause " WHERE [Expr] "
+	}
+
+	print "[SS]
 }
 

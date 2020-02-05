@@ -21,7 +21,7 @@ lex
 		`AND `OR
 		`+ `- `* `/ `% `& `| `^
 		`= `!= `<> `< `<= `> `>= 
-		`=~
+		`=~ `!~
 		`. `: `( `) `, `;
 
 	# Not sure if these are keywords, or just identifiers with a restriction.
@@ -84,6 +84,10 @@ def into_clause
 def from_clause
 	[`FROM measurements]
 
+def opt_where_clause
+	[where_clause]
+|	[]
+
 def where_clause
 	[`WHERE expr]
 
@@ -114,7 +118,7 @@ def timezone_clause
 
 def select_stmt
 	[`SELECT fields
-		into_clause? from_clause where_clause?
+		into_clause? from_clause opt_where_clause
 		group_by_clause? order_by_clause? limit_clause?
 		offset_clause? slimit_clause? soffset_clause? timezone_clause?]
 
@@ -129,16 +133,39 @@ def select_stmt
 
 #
 # Expressions
+# FIXME: missing =~ and !~
 #
-# FIXME: missing ~=
-def binary_op
-	[`+] | [`-] | [`*] | [`/] | [`%] | [`&] | [`|] | [`^]
-|	[`AND] | [`OR] | [`=] | [`!=] | [`<>] | [`<] | [`<=] | [`>] | [`>=] 
-|	[`=~]
-
 def expr
-	[expr binary_op unary_op unary_expr]
-|	[unary_op unary_expr]
+	[disjunction_expression]
+
+def disjunction_expression
+	[disjunction_expression `OR conjunction_expression]
+|	[conjunction_expression]
+
+def conjunction_expression
+	[conjunction_expression `AND comparison_expression]
+|	[comparison_expression]
+
+def comparison_expression
+	[comparison_expression comparison_operator additive_expression]
+|	[additive_expression]
+
+def comparison_operator
+	[`=] | [`!=] | [`<>] | [`<] | [`<=] | [`>] | [`>=] | [`=~] | [`!~]
+
+def additive_expression
+	[additive_expression additive_operator multiplicative_expression]
+|	[multiplicative_expression]
+
+def additive_operator
+	[`+] | [`-] | [`|] | [`^]
+
+def multiplicative_expression
+	[multiplicative_expression multiplicative_operator prefix_expression]
+|	[prefix_expression]
+
+def multiplicative_operator
+	[`*] | [`/] | [`%] | [`&] 
 
 def call_args
 	[call_args `, expr]
@@ -146,6 +173,9 @@ def call_args
 
 def unary_op
 	[`-] | [`+] | []
+def prefix_expression
+	[unary_op unary_expr]
+|	[unary_expr]
 
 # seems to be missing function call.
 # DOC FIXME: spec seems to be missing function call.
