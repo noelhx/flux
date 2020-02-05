@@ -11,12 +11,12 @@ if ( !P ) {
 	exit( 1 )
 }
 
-void normalize_conjunctions( LE: ref<expr> )
+void normalize_conjunctions( Expr: ref<expr> )
 {
 	Modified: bool = true
 	while ( Modified ) {
 		Modified = false
-		for SLE: conjunction_expression in LE {
+		for SLE: conjunction_expression in Expr {
 			if match SLE
 				[ `( CE: conjunction_expression `) ] 
 			{
@@ -24,38 +24,68 @@ void normalize_conjunctions( LE: ref<expr> )
 				Modified = true
 			}
 			else if match SLE
-				[ LE2: conjunction_expression `AND `( CE: conjunction_expression `) ] 
+				[ LeftCE: conjunction_expression `AND `( InnerCE: conjunction_expression `) ] 
 			{
-				# Place LE2 at the end of the CE list.
-				for Tail: conjunction_expression in CE {
+				# Place LeftCE at the end of the InnerCE list.
+				for Tail: conjunction_expression in InnerCE {
 					if match Tail [Last: comparison_expression] {
-						Tail = cons conjunction_expression " [LE2] AND [Last] "
+						Tail = cons conjunction_expression " [LeftCE] AND [Last] "
+						# Must break here to end the replacement loop.
 						break
 					}
 				}
 
-				SLE = CE
+				SLE = InnerCE
 				Modified = true
 			}
 		}
 	}
 }
 
-#
+bool time_constraint( Any: any )
+{
+	for UE: unary_expr in Any {
+		if match UE "time"
+			return true
+	}
+	return false
+}
+
+void disjunctions_of_time( Expr: expr )
+{
+	Found: bool = false
+	for DE: disjunction_expression in Expr {
+		if match DE
+			[Left: disjunction_expression `OR Right: conjunction_expression]
+		{
+			if time_constraint( Left ) || time_constraint( Right ) {
+				print "ERROR: disjunction of time found: [^DE]
+				Found = true
+			}
+		}
+	}
+	if ( Found )
+		exit( 1 )
+}
+
+# 1. Normalize conjunctions.
+# 2. Extract time constraints. Fail if we find any inside a disjunction.
+
 # 1. Pull and apply the time constraint. Replace with true. Expect conjunction
 # 2. Remaining where clause items.
 # 3. Apply Group By.
 # 4. Select Expressions
 #
 for SS: select_stmt in P {
-	WC: where_clause = where_clause in SS
+	print "select statement:\n[^SS]\n"
+
+	WC: where_clause = SS.opt_where_clause.where_clause
 	if WC {
 		Expr: expr = WC.expr
+
 		normalize_conjunctions( Expr )
-
-		SS.opt_where_clause = cons opt_where_clause " WHERE [Expr] "
+		print "normalized where clause expression:\n[^Expr]\n"
+		disjunctions_of_time( Expr )
 	}
-
-	print "[SS]
 }
 
