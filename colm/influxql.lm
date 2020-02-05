@@ -45,7 +45,7 @@ lex
 
 	token float_lit        / int_lit "." int_lit /
 
-	token string_lit       / "'" ( unicode_char )* "'" /
+	token string_lit       / "'" ( unicode_char )* :> "'" /
 
 	# missing: "µs"
 	rl duration_unit       / "ns" | "u" | "ms" | "s" | "m" | "h" | "d" | "w" /
@@ -306,5 +306,5 @@ def var_ref
 def item
 	[select_stmt `;]
 
-def program
+def influxql
 	[item*]

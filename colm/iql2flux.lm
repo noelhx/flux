@@ -4,7 +4,7 @@ end
 
 include 'influxql.lm'
 
-parse P: program [stdin]
+parse P: influxql [stdin]
 
 if ( !P ) {
 	print "[error]
@@ -53,19 +53,40 @@ bool time_constraint( Any: any )
 
 void disjunctions_of_time( Expr: expr )
 {
-	Found: bool = false
+	Error: bool = false
 	for DE: disjunction_expression in Expr {
 		if match DE
 			[Left: disjunction_expression `OR Right: conjunction_expression]
 		{
 			if time_constraint( Left ) || time_constraint( Right ) {
 				print "ERROR: disjunction of time found: [^DE]
-				Found = true
+				Error = true
 			}
 		}
 	}
-	if ( Found )
+	if ( Error )
 		exit( 1 )
+}
+
+# Find time constraints and verify we can handle them.
+void yank_time( Expr: ref<expr> )
+{
+	Error: bool = false
+	for CE: comparison_expression in Expr {
+		if ( time_constraint( CE ) ) {
+			if
+				!match CE "time [comparison_operator duration_lit] " &&
+				!match CE "[duration_lit comparison_operator] time"
+			{
+				print "ERROR: wonky time constraint: [CE]
+				Error = true
+			}
+
+			CE = cons comparison_expression " true "
+		}
+	}
+	if ( Error )
+		exit(1)
 }
 
 # 1. Normalize conjunctions.
@@ -76,6 +97,10 @@ void disjunctions_of_time( Expr: expr )
 # 3. Apply Group By.
 # 4. Select Expressions
 #
+
+alias output parser<flux::flux>
+new Output: output()
+
 for SS: select_stmt in P {
 	print "select statement:\n[^SS]\n"
 
@@ -84,8 +109,15 @@ for SS: select_stmt in P {
 		Expr: expr = WC.expr
 
 		normalize_conjunctions( Expr )
-		print "normalized where clause expression:\n[^Expr]\n"
 		disjunctions_of_time( Expr )
+		yank_time( Expr )
+
+		# print "normalized where clause expression:\n[^Expr]\n"
 	}
 }
+
+send Output 'from("the-bucket")' [] eos
+Flux: flux::flux = Output->tree
+
+print "flux output:\n[^Flux]\n"
 
