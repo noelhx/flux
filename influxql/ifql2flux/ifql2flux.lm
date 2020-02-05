@@ -11,6 +11,10 @@ if ( !P ) {
 	exit( 1 )
 }
 
+#
+# Part of the first stab at yanking time from the where clause. Not used. Turns
+# out a different approach is required. 
+#
 void normalize_conjunctions( Expr: ref<expr> )
 {
 	Modified: bool = true
@@ -51,6 +55,9 @@ bool time_constraint( Any: any )
 	return false
 }
 
+# Reports an error if any disjunctions of time are found. The official influxql
+# parser allows them, just yanks them from the expression and AND's them
+# together, so we don't use this function, just here for reference.
 void disjunctions_of_time( Expr: expr )
 {
 	Error: bool = false
@@ -74,19 +81,67 @@ void yank_time( Expr: ref<expr> )
 	Error: bool = false
 	for CE: comparison_expression in Expr {
 		if ( time_constraint( CE ) ) {
-			if
-				!match CE "time [comparison_operator duration_lit] " &&
-				!match CE "[duration_lit comparison_operator] time"
+			if !match CE "( [expr] )"
 			{
-				print "ERROR: wonky time constraint: [CE]
-				Error = true
-			}
+				if
+					!match CE "time [comparison_operator duration_lit] " &&
+					!match CE "[duration_lit comparison_operator] time"
+				{
+					print "ERROR: wonky time constraint: [CE]
+					Error = true
+				}
 
-			CE = cons comparison_expression " true "
+				CE = cons comparison_expression " __ERASE_ME__ "
+			}
 		}
 	}
 	if ( Error )
 		exit(1)
+}
+
+# Remove the expression components left behind by the time yanking.
+void clean_expr( Expr: ref<expr> )
+{
+	Modified: bool = true
+	while ( Modified ) {
+		Modified = false
+		for DE: disjunction_expression in Expr {
+			if match DE
+				"[ Left: disjunction_expression ] OR __ERASE_ME__"
+			{
+				DE = Left
+				Modified = true
+			}
+			else if match DE
+				"__ERASE_ME__ OR [ Right: conjunction_expression ]"
+			{
+				DE = cons disjunction_expression [Right]
+				Modified = true
+			}
+		}
+
+		for CE: conjunction_expression in Expr {
+			if match CE
+				"[ Left: conjunction_expression ] AND __ERASE_ME__"
+			{
+				CE = Left
+				Modified = true
+			}
+			else if match CE
+				"__ERASE_ME__ AND [ Right: comparison_expression ]"
+			{
+				CE = cons conjunction_expression [Right]
+				Modified = true
+			}
+		}
+
+		for CmpE: comparison_expression in Expr {
+			if match CmpE "( __ERASE_ME__ )" {
+				CmpE = cons comparison_expression "__ERASE_ME__"
+				Modified = true
+			}
+		}
+	}
 }
 
 # 1. Normalize conjunctions.
@@ -99,25 +154,29 @@ void yank_time( Expr: ref<expr> )
 #
 
 alias output parser<flux::flux>
-new Output: output()
 
 for SS: select_stmt in P {
-	print "select statement:\n[^SS]\n"
+	new Output: output()
+
+	print "select statement: [^SS]
 
 	WC: where_clause = SS.opt_where_clause.where_clause
 	if WC {
 		Expr: expr = WC.expr
 
-		normalize_conjunctions( Expr )
-		disjunctions_of_time( Expr )
+		#normalize_conjunctions( Expr )
 		yank_time( Expr )
+		clean_expr( Expr )
 
-		# print "normalized where clause expression:\n[^Expr]\n"
+		print "scrubbed where: [^Expr]
 	}
+
+	send Output 'from("the-bucket")' [] eos
+	Flux: flux::flux = Output->tree
+
+	print "flux output:\n[^Flux]\n"
+	print "
 }
 
-send Output 'from("the-bucket")' [] eos
-Flux: flux::flux = Output->tree
 
-print "flux output:\n[^Flux]\n"
 

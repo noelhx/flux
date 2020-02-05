@@ -1,5 +1,5 @@
 # time search
 
 SELECT "foo" FROM bar
-	WHERE ( time > 1 AND time < 2 ) AND ( 1 OR FAR );
+	WHERE ( time > 1m AND time < 2m ) AND ( 1 OR FAR );
 
