@@ -4,10 +4,9 @@ end
 
 include 'influxql.lm'
 
-parse P: influxql [stdin]
-
+parse P: influxql [stdin] 
 if ( !P ) {
-	print "[error]
+	send stderr "error parsing influxql query: [error]
 	exit( 1 )
 }
 
@@ -75,19 +74,40 @@ void disjunctions_of_time( Expr: expr )
 		exit( 1 )
 }
 
+def time_range
+	Start: comparison_expression
+	Stop: comparison_expression
+[]
+
+bool check_time( Range: ref<time_range>, CE: comparison_expression )
+{
+	if match CE "time [Op: comparison_operator Rhs: additive_expression ] "
+			&& ( match Op "<" || match Op "<=" )
+	{
+		Range.Stop = cons comparison_expression [Rhs]
+		return true
+	}
+
+	if match CE "time [Op: comparison_operator Rhs: additive_expression ] "
+			&& ( match Op ">" || match Op ">=" )
+	{
+		Range.Start = cons comparison_expression [Rhs]
+		return true
+	}
+	
+	return false
+}
+
 # Find time constraints and verify we can handle them.
-void yank_time( Expr: ref<expr> )
+void yank_time( Range: ref<time_range>, Expr: ref<expr> )
 {
 	Error: bool = false
 	for CE: comparison_expression in Expr {
 		if ( time_constraint( CE ) ) {
 			if !match CE "( [expr] )"
 			{
-				if
-					!match CE "time [comparison_operator duration_lit] " &&
-					!match CE "[duration_lit comparison_operator] time"
-				{
-					print "ERROR: wonky time constraint: [CE]
+				if !check_time( Range, CE ) {
+					send stderr "ERROR: wonky time constraint: [CE]
 					Error = true
 				}
 
@@ -95,6 +115,7 @@ void yank_time( Expr: ref<expr> )
 			}
 		}
 	}
+
 	if ( Error )
 		exit(1)
 }
@@ -144,39 +165,57 @@ void clean_expr( Expr: ref<expr> )
 	}
 }
 
-# 1. Normalize conjunctions.
-# 2. Extract time constraints. Fail if we find any inside a disjunction.
-
-# 1. Pull and apply the time constraint. Replace with true. Expect conjunction
-# 2. Remaining where clause items.
-# 3. Apply Group By.
-# 4. Select Expressions
-#
+# 1. Extract time constraints from the where clause.
+# 2. Build range from extracted time constraints.
+# 3. Build filter from remaining where clause (not implemented).
+# 4. Apply Group By (not implemented)
+# 5. Apply Select Expressions (not implemented).
 
 alias output parser<flux::flux>
 
 for SS: select_stmt in P {
 	new Output: output()
 
-	print "select statement: [^SS]
+	# send stderr "select statement: [^SS]
+	cons Range: time_range []
 
 	WC: where_clause = SS.opt_where_clause.where_clause
 	if WC {
 		Expr: expr = WC.expr
 
-		#normalize_conjunctions( Expr )
-		yank_time( Expr )
+		yank_time( Range, Expr )
 		clean_expr( Expr )
 
-		print "scrubbed where: [^Expr]
+		# send stderr "scrubbed where: [^Expr]
 	}
 
-	send Output 'from("the-bucket")' [] eos
+	if !Range.Start
+		Range.Start = cons comparison_expression "-1m"
+
+	if argv->length < 1 {
+		send stderr "usage: ./ifql2flux bucket-name
+		exit(1)
+	}
+
+	# Bucket
+	send Output
+		"from( bucket: \"[argv->head_el->value]\")
+	
+	# Range
+	send Output
+		"	|> range( start: [Range.Start] "
+	if Range.Stop
+		send Output ", stop: [Range.Stop] "
+	send Output " )
+
+	send Output [] eos
+
 	Flux: flux::flux = Output->tree
-
-	print "flux output:\n[^Flux]\n"
-	print "
+	if !Flux {
+		send stderr "error parsing transformation output: [Output->error]
+		exit(1)
+	}
+	else {
+		print [Flux]
+	}
 }
-
-
-
