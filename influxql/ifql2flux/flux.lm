@@ -134,6 +134,7 @@ def comma_property
 
 def property_list
 	[ property comma_property*]
+|	[]
 
 def colon_expr
 	[`: expression]
