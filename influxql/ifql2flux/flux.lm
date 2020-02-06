@@ -388,4 +388,4 @@ def parameter_type
 	[identifier `: pipe_receive_lit? type_expression]
 
 def flux
-	[statement_list]
+	[file]
