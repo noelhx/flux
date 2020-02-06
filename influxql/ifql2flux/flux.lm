@@ -269,22 +269,22 @@ def multiplicative_operator
 	[`*] | [`/] | [`%] | [`^]
 
 def pipe_expression
-	[postfix_expression]
-|	[pipe_expression pipe_operator unary_expression]
+	[pipe_expression pipe_operator unary_expression]
+|	[unary_expression]
 
 def pipe_operator
 	[`|>]
 
 def unary_expression
-	[postfix_expression]
-|	[prefix_operator unary_expression]
+	[prefix_operator unary_expression]
+|	[postfix_expression]
 
 def prefix_operator
 	[`+] | [`-]
 
 def postfix_expression
-	[primary_expression]
-|	[postfix_expression postfix_operator]
+	[postfix_expression postfix_operator]
+|	[primary_expression]
 
 def postfix_operator
 	[member_expression]
