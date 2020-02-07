@@ -230,40 +230,40 @@ def expression
 	[conditional_expression]
 
 def conditional_expression
-	[logical_expression]
-|	[`if expression `then expression `else expression]
+	[`if expression `then expression `else expression]
+|	[logical_expression]
 
 def logical_expression
-	[unary_logical_expression]
-|	[logical_expression logical_operator unary_logical_expression]
+	[logical_expression logical_operator unary_logical_expression]
+|	[unary_logical_expression]
 
 def logical_operator
 	[`and] | [`or]
 
 def unary_logical_expression
-	[comparison_expression]
-|	[unary_logical_operator unary_logical_expression]
+	[unary_logical_operator unary_logical_expression]
+|	[comparison_expression]
 
 def unary_logical_operator
 	[`not] | [`exists]
 
 def comparison_expression
-	[additive_expression]
-|	[comparison_expression comparison_operator additive_expression]
+	[comparison_expression comparison_operator additive_expression]
+|	[additive_expression]
 
 def comparison_operator
 	[`==] | [`!=] | [`<] | [`<=] | [`>] | [`>=] | [`=~] | [`!~]
 
 def additive_expression
-	[multiplicative_expression]
-|	[additive_expression additive_operator multiplicative_expression]
+	[additive_expression additive_operator multiplicative_expression]
+|	[multiplicative_expression]
 
 def additive_operator
 	[`+] | [`-]
 
 def multiplicative_expression
-	[pipe_expression]
-|	[multiplicative_expression multiplicative_operator pipe_expression]
+	[multiplicative_expression multiplicative_operator pipe_expression]
+|	[pipe_expression]
 
 def multiplicative_operator
 	[`*] | [`/] | [`%] | [`^]
