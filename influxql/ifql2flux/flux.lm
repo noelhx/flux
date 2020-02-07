@@ -98,24 +98,6 @@ def statement_list
 # Expressions
 #
 
-def primary_expression
-	[identifier]
-|	[_literal]
-|	[`( expression `)]
-
-
-def _literal
-	[int_lit]
-|	[float_lit]
-|	[string_lit]
-|	[`/ regex_lit]
-|	[date_time_lit]
-|	[duration_lit]
-|	[pipe_receive_lit]
-|	[object_literal]
-|	[array_literal]
-|	[function_literal]
-
 #
 # Object Literals
 #
@@ -290,6 +272,23 @@ def postfix_operator
 	[member_expression]
 |	[call_expression]
 |	[index_expression]
+
+def primary_expression
+	[identifier]
+|	[_literal]
+|	[`( expression `)]
+
+def _literal
+	[int_lit]
+|	[float_lit]
+|	[string_lit]
+|	[`/ regex_lit]
+|	[date_time_lit]
+|	[duration_lit]
+|	[pipe_receive_lit]
+|	[object_literal]
+|	[array_literal]
+|	[function_literal]
 
 #
 # System built-ins

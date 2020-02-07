@@ -4,6 +4,11 @@ end
 
 include 'influxql.lm'
 
+if argv->length < 1 {
+	send stderr "usage: ./ifql2flux bucket-name
+	exit(1)
+}
+
 parse P: influxql [stdin] 
 if ( !P ) {
 	send stderr "error parsing influxql query: [error]
@@ -181,23 +186,14 @@ for SS: select_stmt in P {
 
 	WC: where_clause = SS.opt_where_clause.where_clause
 	if WC {
-		Expr: expr = WC.expr
-
-		yank_time( Range, Expr )
-		clean_expr( Expr )
-
-		# send stderr "scrubbed where: [^Expr]
+		yank_time( Range, WC.expr )
+		clean_expr( WC.expr )
 	}
 
 	if !Range.Start
 		Range.Start = cons comparison_expression "-1m"
 
-	if argv->length < 1 {
-		send stderr "usage: ./ifql2flux bucket-name
-		exit(1)
-	}
-
-	# Bucket
+	# Bucket.
 	send Output
 		"from( bucket: \"[argv->head_el->value]\")
 	
@@ -208,6 +204,50 @@ for SS: select_stmt in P {
 
 	send Output
 		"	|> range( start: [Range.Start] [Stop] )
+
+	# Add measurement as a filter.
+	for Measurement: measurement in SS.from_clause {
+		M: str = $Measurement
+		if match Measurement [unquoted_identifier]
+			M = "\"[$Measurement]\""
+		send Output
+			"	|> filter( fn: (r) => ( r._measurement == [M] ) )
+	}
+
+	for Op: AND in WC.expr {
+		match Op [And: `AND]
+		And.data = 'and'
+		Op = cons AND [And]
+	}
+
+	for Op: OR in WC.expr {
+		match Op [Or: `OR]
+		Or.data = 'or'
+		Op = cons OR [Or]
+	}
+
+	for CE: comparison_operator in WC.expr {
+		if match CE [Eq: `=] {
+			Eq.data = "=="
+			CE = cons comparison_operator [ Eq ]
+		}
+	}
+	parse Expr: flux::expression [WC.expr]
+	if !Expr {
+		send stderr
+			"ERROR: failed to reparse remaining parts of where clause as flux expression: [error]
+			"ERROR: [WC.expr]
+		exit(1)
+	}
+	
+	for UE: flux::unary_expression in Expr {
+		if match UE [ID: flux::identifier] {
+			UE = cons flux::unary_expression " r. [ID] "
+		}
+	}
+
+	send Output
+		"	|> filter( fn: (r) => ( [Expr ] ) )
 
 	send Output [] eos
 

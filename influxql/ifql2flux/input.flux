@@ -65,3 +65,8 @@ obj.k //asdlkfj
 obj["k"]
 
 color = if code == 0 then "green" else if code == 1 then "yellow" else "red"
+
+from( bucket: "the-bucket")
+        |> range( start: -2m  , stop: -1m  )
+        |> filter( fn: (r) => ( r._measurement == "cpu" ) )
+        |> filter( fn: (r) => ( r.cpu == "cpu-total" ) )
