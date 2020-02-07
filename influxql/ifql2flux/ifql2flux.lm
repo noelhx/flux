@@ -15,41 +15,6 @@ if ( !P ) {
 	exit( 1 )
 }
 
-#
-# Part of the first stab at yanking time from the where clause. Not used. Turns
-# out a different approach is required. 
-#
-void normalize_conjunctions( Expr: ref<expr> )
-{
-	Modified: bool = true
-	while ( Modified ) {
-		Modified = false
-		for SLE: conjunction_expression in Expr {
-			if match SLE
-				[ `( CE: conjunction_expression `) ] 
-			{
-				SLE = CE
-				Modified = true
-			}
-			else if match SLE
-				[ LeftCE: conjunction_expression `AND `( InnerCE: conjunction_expression `) ] 
-			{
-				# Place LeftCE at the end of the InnerCE list.
-				for Tail: conjunction_expression in InnerCE {
-					if match Tail [Last: comparison_expression] {
-						Tail = cons conjunction_expression " [LeftCE] AND [Last] "
-						# Must break here to end the replacement loop.
-						break
-					}
-				}
-
-				SLE = InnerCE
-				Modified = true
-			}
-		}
-	}
-}
-
 bool time_constraint( Any: any )
 {
 	for UE: unary_expr in Any {
@@ -57,26 +22,6 @@ bool time_constraint( Any: any )
 			return true
 	}
 	return false
-}
-
-# Reports an error if any disjunctions of time are found. The official influxql
-# parser allows them, just yanks them from the expression and AND's them
-# together, so we don't use this function, just here for reference.
-void disjunctions_of_time( Expr: expr )
-{
-	Error: bool = false
-	for DE: disjunction_expression in Expr {
-		if match DE
-			[Left: disjunction_expression `OR Right: conjunction_expression]
-		{
-			if time_constraint( Left ) || time_constraint( Right ) {
-				print "ERROR: disjunction of time found: [^DE]
-				Error = true
-			}
-		}
-	}
-	if ( Error )
-		exit( 1 )
 }
 
 def time_range
@@ -121,7 +66,7 @@ void yank_time( Range: ref<time_range>, Expr: ref<expr> )
 	for CE: comparison_expression in Expr {
 		if ( time_constraint( CE ) ) {
 			if !match CE "( [expr] )"
-			{
+		{
 				if !check_time( Range, CE ) {
 					send stderr "ERROR: wonky time constraint: [CE]
 					Error = true
@@ -181,8 +126,32 @@ void clean_expr( Expr: ref<expr> )
 	}
 }
 
+void add_time_range( Output: output, Range: time_range )
+{
+	# Range stop.
+	cons Stop: flux::comma_property* []
+	if Range.Stop
+		Stop = parse flux::comma_property* ", stop: [$Range.Stop] "
+
+	send Output
+		"	|> range( start: [Range.Start] [Stop] )
+}
+
+void add_measurement_filter( Output: output, SS: select_stmt )
+{
+	# Add measurement as a filter.
+	for Measurement: measurement in SS.from_clause {
+		M: str = $Measurement
+		if match Measurement [unquoted_identifier]
+			M = "\"[M]\""
+		send Output
+			"	|> filter( fn: (r) => ( r._measurement == [M] ) )
+	}
+}
+
 void add_where_filter( Output: output, WC: where_clause )
 {
+	# We are hacking the influxql query so that it will parse as a flux query.
 	for Op: AND in WC.expr {
 		match Op [And: `AND]
 		And.data = 'and'
@@ -201,6 +170,9 @@ void add_where_filter( Output: output, WC: where_clause )
 			CE = cons comparison_operator [ Eq ]
 		}
 	}
+
+	# Reparsing the expression as a flux query. This sends the InfluxQL tree,
+	# as text, to a flux expession parser.
 	parse Expr: flux::expression [WC.expr]
 	if !Expr {
 		send stderr
@@ -209,14 +181,32 @@ void add_where_filter( Output: output, WC: where_clause )
 		exit(1)
 	}
 	
+	# After reparsing as flux we do some rewriting to add r. qualifications.
 	for UE: flux::unary_expression in Expr {
 		if match UE [ID: flux::identifier] {
-			UE = cons flux::unary_expression " r. [ID] "
+			UE = cons flux::unary_expression " r.[ID] "
 		}
 	}
 
+	# Generate.
 	send Output
 		"	|> filter( fn: (r) => ( [Expr ] ) )
+}
+
+void add_select_filter( Output: output, SS: select_stmt )
+{
+	# Add select expression as a filter. Note that this just works on simple
+	# select expression that name a value. It does not evaluate expressions.
+	for Field: field in SS.fields {
+		if match Field [Id: identifier] {
+			FieldName: str = $Id
+			if match Id [unquoted_identifier]
+				FieldName = "\"[FieldName]\""
+
+			send Output
+				"	|> filter( fn: (r) => ( r._field == [FieldName] ) )
+		}
+	}
 }
 
 # (not an exhaustive list)
@@ -230,53 +220,32 @@ void add_where_filter( Output: output, WC: where_clause )
 alias output parser<flux::flux>
 
 for SS: select_stmt in P {
-	new Output: output()
-
 	# send stderr "select statement: [^SS]
 	cons Range: time_range []
 
+	# Extracting time range from the whre clause. Leaves WC.expr altered.
 	WC: where_clause = SS.opt_where_clause.where_clause
 	if WC {
 		yank_time( Range, WC.expr )
 		clean_expr( WC.expr )
 	}
 
+	# If there is no start range, add one. 
 	if !Range.Start
 		Range.Start = parse flux::expression "-1m"
 
-	# Bucket.
+	# Writing output. Note that this output stream is a parser, so it is
+	# parsing what is sent to it, as we go along. At the end we will extract
+	# the tree and there is opportunity for further rewriting on that. Although
+	# we are not doing that in this version.
+	new Output: output()
 	send Output
 		"from( bucket: \"[argv->head_el->value]\")
-	
-	# Range stop.
-	cons Stop: flux::comma_property* []
-	if Range.Stop
-		Stop = parse flux::comma_property* ", stop: [$Range.Stop] "
 
-	send Output
-		"	|> range( start: [Range.Start] [Stop] )
-
-	# Add measurement as a filter.
-	for Measurement: measurement in SS.from_clause {
-		M: str = $Measurement
-		if match Measurement [unquoted_identifier]
-			M = "\"[M]\""
-		send Output
-			"	|> filter( fn: (r) => ( r._measurement == [M] ) )
-	}
-
+	add_time_range( Output, Range )
+	add_measurement_filter( Output, SS )
 	add_where_filter( Output, WC )
-
-	# Add select expressures as a filter.
-	for Field: field in SS.fields {
-		if match Field [Id: identifier] {
-			FieldName: str = $Id
-			if match Id [unquoted_identifier]
-				FieldName = "\"[FieldName]\""
-			send Output
-				"	|> filter( fn: (r) => ( r._field == [FieldName] ) )
-		}
-	}
+	add_select_filter( Output, SS )
 
 	send Output [] eos
 
