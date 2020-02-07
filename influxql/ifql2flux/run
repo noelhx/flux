@@ -11,8 +11,9 @@ fi
 unset ORG BUCKET TOKEN
 . config.sh
 
-IFQL=`mktemp tmp.XXXXX`
-FLUX=`mktemp tmp.XXXXX`
+IFQL=`mktemp /tmp/tmp.XXXXX`
+FLUX=`mktemp /tmp/tmp.XXXXX`
+trap "rm -f $IFQL $FLUX" EXIT
 
 # outputs the input text which can either be literal code outputted as is, or
 # catted from @filename.
@@ -45,6 +46,5 @@ curl -s \
 	"http://localhost:9999/api/v2/query?org=$ORG" \
 	--data-binary "@$FLUX"
 echo
-rm $IFQL $FLUX
 
 

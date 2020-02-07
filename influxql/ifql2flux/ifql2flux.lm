@@ -201,12 +201,13 @@ for SS: select_stmt in P {
 	send Output
 		"from( bucket: \"[argv->head_el->value]\")
 	
-	# Range
-	send Output
-		"	|> range( start: [Range.Start] "
+	# Range stop.
+	cons Stop: flux::comma_property* []
 	if Range.Stop
-		send Output ", stop: [Range.Stop] "
-	send Output " )
+		Stop = parse flux::comma_property* ", stop: [$Range.Stop] "
+
+	send Output
+		"	|> range( start: [Range.Start] [Stop] )
 
 	send Output [] eos
 
