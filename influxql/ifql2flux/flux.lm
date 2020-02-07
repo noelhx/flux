@@ -314,11 +314,11 @@ def	package_clause
 #
 
 def statement
-	[option_assignment]
-|	[builtin_statement]
-|	[variable_assignment]
-|	[return_statement]
-|	[expression_statement]
+	[option_assignment] commit
+|	[builtin_statement] commit
+|	[variable_assignment] commit
+|	[return_statement] commit
+|	[expression_statement] commit
 
 def import_declaration
 	[`import identifier? string_lit]
