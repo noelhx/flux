@@ -171,6 +171,12 @@ void add_where_filter( Output: output, WC: where_clause )
 		}
 	}
 
+	for SL: string_lit in WC.expr {
+		Str: str = $SL
+		Str = prefix( suffix( Str, 1 ), Str.length - 2 )
+		SL.data = "\"[Str]\""
+	}
+
 	# Reparsing the expression as a flux query. This sends the InfluxQL tree,
 	# as text, to a flux expession parser.
 	parse Expr: flux::expression [WC.expr]
