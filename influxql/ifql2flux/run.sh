@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# echo usage ./run.sh query
+# usage: ./run.sh influxql query
+#        ./run.sh flux query
 
 if ! [ -f config.sh ]; then
 	echo "please create a config.sh that sets ORG, BUCKET and TOKEN"
@@ -13,17 +14,32 @@ unset ORG BUCKET TOKEN
 IFQL=`mktemp tmp.XXXXX`
 FLUX=`mktemp tmp.XXXXX`
 
-echo "$1;" > $IFQL
+# outputs the input text which can either be literal code outputted as is, or
+# catted from @filename.
+input()
+{
+	if [ "${1:0:1}" = '@' ]; then
+		cat ${1:1}
+	else
+		echo ${1}
+	fi
+}
 
-if ! ./ifql2flux $BUCKET < $IFQL >> $FLUX; then
-	rm $IFQL $FLUX
-	exit 1;
+if [ "$1" = influxql ]; then
+	input "$2" > $IFQL
+
+	if ! ./ifql2flux $BUCKET < $IFQL >> $FLUX; then
+		rm $IFQL $FLUX
+		exit 1;
+	fi
+elif [ "$1" = flux ]; then
+	input "$2" > $FLUX
 fi
 
 echo sending query:
 cat $FLUX
 
-curl \
+curl -s \
 	-H "Authorization: Token $TOKEN" \
 	-H "Content-Type: application/vnd.flux" \
 	"http://localhost:9999/api/v2/query?org=$ORG" \
