@@ -80,26 +80,37 @@ void disjunctions_of_time( Expr: expr )
 }
 
 def time_range
-	Start: comparison_expression
-	Stop: comparison_expression
+	Start: flux::expression
+	Stop: flux::expression
 []
+
+void unquote_times( AE: ref<additive_expression> )
+{
+	for QI: quoted_identifier in AE {
+		Time: str = $QI
+		Time = prefix( suffix( Time, 1 ), Time.length - 2 )
+		QI.data = Time
+	}
+}
 
 bool check_time( Range: ref<time_range>, CE: comparison_expression )
 {
-	if match CE "time [Op: comparison_operator Rhs: additive_expression ] "
+	if match CE "time [Op: comparison_operator Rhs: additive_expression ]"
 			&& ( match Op "<" || match Op "<=" )
 	{
-		Range.Stop = cons comparison_expression [Rhs]
+		unquote_times( Rhs )
+		Range.Stop = parse flux::expression [Rhs]
 		return true
 	}
 
-	if match CE "time [Op: comparison_operator Rhs: additive_expression ] "
+	if match CE "time [Op: comparison_operator Rhs: additive_expression ]"
 			&& ( match Op ">" || match Op ">=" )
 	{
-		Range.Start = cons comparison_expression [Rhs]
+		unquote_times( Rhs )
+		Range.Start = parse flux::expression [Rhs]
 		return true
 	}
-	
+
 	return false
 }
 
@@ -170,50 +181,8 @@ void clean_expr( Expr: ref<expr> )
 	}
 }
 
-# 1. Extract time constraints from the where clause.
-# 2. Build range from extracted time constraints.
-# 3. Build filter from remaining where clause (not implemented).
-# 4. Apply Group By (not implemented)
-# 5. Apply Select Expressions (not implemented).
-
-alias output parser<flux::flux>
-
-for SS: select_stmt in P {
-	new Output: output()
-
-	# send stderr "select statement: [^SS]
-	cons Range: time_range []
-
-	WC: where_clause = SS.opt_where_clause.where_clause
-	if WC {
-		yank_time( Range, WC.expr )
-		clean_expr( WC.expr )
-	}
-
-	if !Range.Start
-		Range.Start = cons comparison_expression "-1m"
-
-	# Bucket.
-	send Output
-		"from( bucket: \"[argv->head_el->value]\")
-	
-	# Range stop.
-	cons Stop: flux::comma_property* []
-	if Range.Stop
-		Stop = parse flux::comma_property* ", stop: [$Range.Stop] "
-
-	send Output
-		"	|> range( start: [Range.Start] [Stop] )
-
-	# Add measurement as a filter.
-	for Measurement: measurement in SS.from_clause {
-		M: str = $Measurement
-		if match Measurement [unquoted_identifier]
-			M = "\"[$Measurement]\""
-		send Output
-			"	|> filter( fn: (r) => ( r._measurement == [M] ) )
-	}
-
+void add_where_filter( Output: output, WC: where_clause )
+{
 	for Op: AND in WC.expr {
 		match Op [And: `AND]
 		And.data = 'and'
@@ -248,12 +217,72 @@ for SS: select_stmt in P {
 
 	send Output
 		"	|> filter( fn: (r) => ( [Expr ] ) )
+}
+
+# (not an exhaustive list)
+# 1. Extract time constraints from the where clause.
+# 2. Build range from extracted time constraints.
+# 3. Add measurement filter.
+# 4. Build filter from remaining where clause.
+# 5. Apply group by (not implemented)
+# 6. Apply simple select expressions.
+
+alias output parser<flux::flux>
+
+for SS: select_stmt in P {
+	new Output: output()
+
+	# send stderr "select statement: [^SS]
+	cons Range: time_range []
+
+	WC: where_clause = SS.opt_where_clause.where_clause
+	if WC {
+		yank_time( Range, WC.expr )
+		clean_expr( WC.expr )
+	}
+
+	if !Range.Start
+		Range.Start = parse flux::expression "-1m"
+
+	# Bucket.
+	send Output
+		"from( bucket: \"[argv->head_el->value]\")
+	
+	# Range stop.
+	cons Stop: flux::comma_property* []
+	if Range.Stop
+		Stop = parse flux::comma_property* ", stop: [$Range.Stop] "
+
+	send Output
+		"	|> range( start: [Range.Start] [Stop] )
+
+	# Add measurement as a filter.
+	for Measurement: measurement in SS.from_clause {
+		M: str = $Measurement
+		if match Measurement [unquoted_identifier]
+			M = "\"[M]\""
+		send Output
+			"	|> filter( fn: (r) => ( r._measurement == [M] ) )
+	}
+
+	add_where_filter( Output, WC )
+
+	# Add select expressures as a filter.
+	for Field: field in SS.fields {
+		if match Field [Id: identifier] {
+			FieldName: str = $Id
+			if match Id [unquoted_identifier]
+				FieldName = "\"[FieldName]\""
+			send Output
+				"	|> filter( fn: (r) => ( r._field == [FieldName] ) )
+		}
+	}
 
 	send Output [] eos
 
 	Flux: flux::flux = Output->tree
 	if !Flux {
-		send stderr "error parsing transformation output: [Output->error]
+		send stderr "ERROR: failed to parse output text: [Output->error]
 		exit(1)
 	}
 	else {
