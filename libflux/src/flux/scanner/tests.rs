@@ -14,7 +14,9 @@ fn test_scan() {
             start_offset: 0,
             end_offset: 4,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 5 }
+            end_pos: Position { line: 1, column: 5 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -25,7 +27,9 @@ fn test_scan() {
             start_offset: 4,
             end_offset: 5,
             start_pos: Position { line: 1, column: 5 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -39,7 +43,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 12
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -56,7 +62,10 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 13
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
+
         }
     );
     assert_eq!(
@@ -73,7 +82,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 18
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -90,7 +101,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 19
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -107,7 +120,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 22
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -124,7 +139,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 28
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -141,7 +158,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 29
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -158,7 +177,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 34
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -175,7 +196,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 35
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -192,7 +215,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 37
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -209,7 +234,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 39
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -226,7 +253,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 40
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -243,7 +272,9 @@ fn test_scan() {
             end_pos: Position {
                 line: 1,
                 column: 40
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -261,7 +292,9 @@ fn test_scan_with_regex() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -272,7 +305,9 @@ fn test_scan_with_regex() {
             start_offset: 2,
             end_offset: 3,
             start_pos: Position { line: 1, column: 3 },
-            end_pos: Position { line: 1, column: 4 }
+            end_pos: Position { line: 1, column: 4 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -283,7 +318,9 @@ fn test_scan_with_regex() {
             start_offset: 4,
             end_offset: 5,
             start_pos: Position { line: 1, column: 5 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -294,7 +331,9 @@ fn test_scan_with_regex() {
             start_offset: 6,
             end_offset: 8,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 9 }
+            end_pos: Position { line: 1, column: 9 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -311,7 +350,9 @@ fn test_scan_with_regex() {
             end_pos: Position {
                 line: 1,
                 column: 19
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -328,7 +369,9 @@ fn test_scan_with_regex() {
             end_pos: Position {
                 line: 1,
                 column: 21
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -345,7 +388,9 @@ fn test_scan_with_regex() {
             end_pos: Position {
                 line: 1,
                 column: 23
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -362,7 +407,9 @@ fn test_scan_with_regex() {
             end_pos: Position {
                 line: 1,
                 column: 23
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -380,7 +427,9 @@ fn test_scan_string_expr_simple() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -391,7 +440,9 @@ fn test_scan_string_expr_simple() {
             start_offset: 1,
             end_offset: 3,
             start_pos: Position { line: 1, column: 2 },
-            end_pos: Position { line: 1, column: 4 }
+            end_pos: Position { line: 1, column: 4 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -405,7 +456,9 @@ fn test_scan_string_expr_simple() {
             end_pos: Position {
                 line: 1,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -422,7 +475,9 @@ fn test_scan_string_expr_simple() {
             end_pos: Position {
                 line: 1,
                 column: 11
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -440,7 +495,9 @@ fn test_scan_string_expr_start_with_text() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -454,7 +511,9 @@ fn test_scan_string_expr_start_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -471,7 +530,9 @@ fn test_scan_string_expr_start_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 12
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -488,7 +549,9 @@ fn test_scan_string_expr_start_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 18
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -505,7 +568,9 @@ fn test_scan_string_expr_start_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 19
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -523,7 +588,9 @@ fn test_scan_string_expr_multiple() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -537,7 +604,9 @@ fn test_scan_string_expr_multiple() {
             end_pos: Position {
                 line: 1,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -554,7 +623,9 @@ fn test_scan_string_expr_multiple() {
             end_pos: Position {
                 line: 1,
                 column: 12
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -571,7 +642,9 @@ fn test_scan_string_expr_multiple() {
             end_pos: Position {
                 line: 1,
                 column: 31
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -588,7 +661,9 @@ fn test_scan_string_expr_multiple() {
             end_pos: Position {
                 line: 1,
                 column: 33
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -605,7 +680,9 @@ fn test_scan_string_expr_multiple() {
             end_pos: Position {
                 line: 1,
                 column: 39
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -622,7 +699,9 @@ fn test_scan_string_expr_multiple() {
             end_pos: Position {
                 line: 1,
                 column: 40
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -640,7 +719,9 @@ fn test_scan_string_expr_end_with_text() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -654,7 +735,9 @@ fn test_scan_string_expr_end_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -671,7 +754,9 @@ fn test_scan_string_expr_end_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 12
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -688,7 +773,9 @@ fn test_scan_string_expr_end_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 32
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -705,7 +792,9 @@ fn test_scan_string_expr_end_with_text() {
             end_pos: Position {
                 line: 1,
                 column: 33
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -723,7 +812,9 @@ fn test_scan_string_expr_escaped_quotes() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -737,7 +828,9 @@ fn test_scan_string_expr_escaped_quotes() {
             end_pos: Position {
                 line: 1,
                 column: 31
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -754,7 +847,9 @@ fn test_scan_string_expr_escaped_quotes() {
             end_pos: Position {
                 line: 1,
                 column: 32
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -772,7 +867,9 @@ fn test_scan_string_expr_not_escaped_quotes() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -783,7 +880,9 @@ fn test_scan_string_expr_not_escaped_quotes() {
             start_offset: 1,
             end_offset: 6,
             start_pos: Position { line: 1, column: 2 },
-            end_pos: Position { line: 1, column: 7 }
+            end_pos: Position { line: 1, column: 7 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -794,7 +893,9 @@ fn test_scan_string_expr_not_escaped_quotes() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -808,7 +909,9 @@ fn test_scan_string_expr_not_escaped_quotes() {
             end_pos: Position {
                 line: 1,
                 column: 32
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -825,7 +928,9 @@ fn test_scan_string_expr_not_escaped_quotes() {
             end_pos: Position {
                 line: 1,
                 column: 33
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -843,7 +948,9 @@ fn test_scan_unread() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     s.unread();
@@ -855,7 +962,9 @@ fn test_scan_unread() {
             start_offset: 0,
             end_offset: 1,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 2 }
+            end_pos: Position { line: 1, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 
@@ -867,7 +976,9 @@ fn test_scan_unread() {
             start_offset: 2,
             end_offset: 7,
             start_pos: Position { line: 1, column: 3 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     s.unread();
@@ -879,7 +990,9 @@ fn test_scan_unread() {
             start_offset: 2,
             end_offset: 3,
             start_pos: Position { line: 1, column: 3 },
-            end_pos: Position { line: 1, column: 4 }
+            end_pos: Position { line: 1, column: 4 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -890,7 +1003,9 @@ fn test_scan_unread() {
             start_offset: 4,
             end_offset: 5,
             start_pos: Position { line: 1, column: 5 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -901,7 +1016,9 @@ fn test_scan_unread() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -915,7 +1032,9 @@ fn test_scan_unread() {
             end_pos: Position {
                 line: 1,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     // test unread idempotence
@@ -935,7 +1054,9 @@ fn test_scan_unread() {
             end_pos: Position {
                 line: 1,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -952,7 +1073,9 @@ fn test_scan_unread() {
             end_pos: Position {
                 line: 1,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -974,6 +1097,8 @@ fn test_scan_unread_with_newlines() {
             end_offset: 5,
             start_pos: Position { line: 1, column: 1 },
             end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -985,6 +1110,8 @@ fn test_scan_unread_with_newlines() {
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
             end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -996,6 +1123,8 @@ fn test_scan_unread_with_newlines() {
             end_offset: 11,
             start_pos: Position { line: 4, column: 1 },
             end_pos: Position { line: 4, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     s.unread();
@@ -1008,6 +1137,8 @@ fn test_scan_unread_with_newlines() {
             end_offset: 15,
             start_pos: Position { line: 4, column: 1 },
             end_pos: Position { line: 4, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -1041,6 +1172,8 @@ fn test_scan_with_regex_unread() {
                 end_offset: 1,
                 start_pos: Position { line: 1, column: 1 },
                 end_pos: Position { line: 1, column: 2 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_MUL,
@@ -1049,6 +1182,8 @@ fn test_scan_with_regex_unread() {
                 end_offset: 3,
                 start_pos: Position { line: 1, column: 3 },
                 end_pos: Position { line: 1, column: 4 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_DIV,
@@ -1057,6 +1192,8 @@ fn test_scan_with_regex_unread() {
                 end_offset: 5,
                 start_pos: Position { line: 1, column: 5 },
                 end_pos: Position { line: 1, column: 6 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_DIV,
@@ -1065,6 +1202,8 @@ fn test_scan_with_regex_unread() {
                 end_offset: 5,
                 start_pos: Position { line: 1, column: 5 },
                 end_pos: Position { line: 1, column: 6 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_INT,
@@ -1073,6 +1212,8 @@ fn test_scan_with_regex_unread() {
                 end_offset: 7,
                 start_pos: Position { line: 1, column: 7 },
                 end_pos: Position { line: 1, column: 8 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_IDENT,
@@ -1087,6 +1228,8 @@ fn test_scan_with_regex_unread() {
                     line: 2,
                     column: 11
                 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_EOF,
@@ -1095,6 +1238,8 @@ fn test_scan_with_regex_unread() {
                 end_offset: 23,
                 start_pos: Position { line: 3, column: 5 },
                 end_pos: Position { line: 3, column: 5 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
         ],
         toks
@@ -1125,6 +1270,8 @@ fn test_unclosed_quote() {
                 end_offset: 1,
                 start_pos: Position { line: 1, column: 1 },
                 end_pos: Position { line: 1, column: 2 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_ASSIGN,
@@ -1133,6 +1280,8 @@ fn test_unclosed_quote() {
                 end_offset: 3,
                 start_pos: Position { line: 1, column: 3 },
                 end_pos: Position { line: 1, column: 4 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_QUOTE,
@@ -1141,6 +1290,8 @@ fn test_unclosed_quote() {
                 end_offset: 5,
                 start_pos: Position { line: 1, column: 5 },
                 end_pos: Position { line: 1, column: 6 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_IDENT,
@@ -1149,6 +1300,8 @@ fn test_unclosed_quote() {
                 end_offset: 8,
                 start_pos: Position { line: 1, column: 6 },
                 end_pos: Position { line: 1, column: 9 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_IDENT,
@@ -1160,6 +1313,8 @@ fn test_unclosed_quote() {
                     line: 2,
                     column: 12,
                 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_IDENT,
@@ -1171,6 +1326,8 @@ fn test_unclosed_quote() {
                     line: 3,
                     column: 12,
                 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             },
             Token {
                 tok: TOK_EOF,
@@ -1185,6 +1342,8 @@ fn test_unclosed_quote() {
                     line: 3,
                     column: 12
                 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             }
         ],
         toks
@@ -1210,7 +1369,9 @@ a
             start_offset: 22,
             end_offset: 23,
             start_pos: Position { line: 2, column: 1 },
-            end_pos: Position { line: 2, column: 2 }
+            end_pos: Position { line: 2, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1221,7 +1382,9 @@ a
             start_offset: 95,
             end_offset: 96,
             start_pos: Position { line: 6, column: 1 },
-            end_pos: Position { line: 6, column: 2 }
+            end_pos: Position { line: 6, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1238,7 +1401,9 @@ a
             end_pos: Position {
                 line: 7,
                 column: 18
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 
@@ -1253,7 +1418,9 @@ a
             start_offset: 22,
             end_offset: 23,
             start_pos: Position { line: 2, column: 1 },
-            end_pos: Position { line: 2, column: 2 }
+            end_pos: Position { line: 2, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1264,7 +1431,9 @@ a
             start_offset: 95,
             end_offset: 96,
             start_pos: Position { line: 6, column: 1 },
-            end_pos: Position { line: 6, column: 2 }
+            end_pos: Position { line: 6, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1281,7 +1450,9 @@ a
             end_pos: Position {
                 line: 7,
                 column: 18
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -1300,7 +1471,9 @@ fn test_scan_eof() {
             start_offset: 0,
             end_offset: 0,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 1 }
+            end_pos: Position { line: 1, column: 1 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1311,7 +1484,9 @@ fn test_scan_eof() {
             start_offset: 0,
             end_offset: 0,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 1 }
+            end_pos: Position { line: 1, column: 1 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1322,7 +1497,9 @@ fn test_scan_eof() {
             start_offset: 0,
             end_offset: 0,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 1 }
+            end_pos: Position { line: 1, column: 1 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1333,7 +1510,9 @@ fn test_scan_eof() {
             start_offset: 0,
             end_offset: 0,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 1 }
+            end_pos: Position { line: 1, column: 1 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1344,7 +1523,9 @@ fn test_scan_eof() {
             start_offset: 0,
             end_offset: 0,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 1 }
+            end_pos: Position { line: 1, column: 1 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1355,7 +1536,9 @@ fn test_scan_eof() {
             start_offset: 0,
             end_offset: 0,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 1 }
+            end_pos: Position { line: 1, column: 1 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -1380,7 +1563,9 @@ fn test_scan_eof_trailing_spaces() {
             start_offset: 7,
             end_offset: 7,
             start_pos: Position { line: 2, column: 5 },
-            end_pos: Position { line: 2, column: 5 }
+            end_pos: Position { line: 2, column: 5 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 
@@ -1394,7 +1579,9 @@ fn test_scan_eof_trailing_spaces() {
             start_offset: 7,
             end_offset: 7,
             start_pos: Position { line: 2, column: 5 },
-            end_pos: Position { line: 2, column: 5 }
+            end_pos: Position { line: 2, column: 5 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -1412,7 +1599,9 @@ fn test_illegal() {
             start_offset: 0,
             end_offset: 5,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1423,7 +1612,9 @@ fn test_illegal() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1437,7 +1628,9 @@ fn test_illegal() {
             end_pos: Position {
                 line: 1,
                 column: 16
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 
@@ -1451,7 +1644,9 @@ fn test_illegal() {
             start_offset: 0,
             end_offset: 5,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1462,7 +1657,10 @@ fn test_illegal() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
+
         }
     );
     s.unread();
@@ -1474,7 +1672,9 @@ fn test_illegal() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1488,7 +1688,9 @@ fn test_illegal() {
             end_pos: Position {
                 line: 1,
                 column: 16
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 
@@ -1502,7 +1704,9 @@ fn test_illegal() {
             start_offset: 0,
             end_offset: 5,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1513,7 +1717,9 @@ fn test_illegal() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1527,7 +1733,9 @@ fn test_illegal() {
             end_pos: Position {
                 line: 1,
                 column: 16
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 
@@ -1541,7 +1749,9 @@ fn test_illegal() {
             start_offset: 0,
             end_offset: 5,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1552,7 +1762,9 @@ fn test_illegal() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     s.unread();
@@ -1564,7 +1776,9 @@ fn test_illegal() {
             start_offset: 6,
             end_offset: 7,
             start_pos: Position { line: 1, column: 7 },
-            end_pos: Position { line: 1, column: 8 }
+            end_pos: Position { line: 1, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1578,7 +1792,9 @@ fn test_illegal() {
             end_pos: Position {
                 line: 1,
                 column: 16
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -1596,7 +1812,9 @@ fn test_scan_duration() {
             start_offset: 0,
             end_offset: 3,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 4 }
+            end_pos: Position { line: 1, column: 4 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1607,7 +1825,9 @@ fn test_scan_duration() {
             start_offset: 4,
             end_offset: 5,
             start_pos: Position { line: 1, column: 5 },
-            end_pos: Position { line: 1, column: 6 }
+            end_pos: Position { line: 1, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1621,7 +1841,9 @@ fn test_scan_duration() {
             end_pos: Position {
                 line: 1,
                 column: 34
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(
@@ -1638,7 +1860,9 @@ fn test_scan_duration() {
             end_pos: Position {
                 line: 1,
                 column: 34
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
 }
@@ -1667,7 +1891,9 @@ c = 1 + 2
             start_offset: 0,
             end_offset: 2,
             start_pos: Position { line: 1, column: 1 },
-            end_pos: Position { line: 1, column: 3 }
+            end_pos: Position { line: 1, column: 3 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(0, s.offset(&Position { line: 1, column: 1 }));
@@ -1679,7 +1905,9 @@ c = 1 + 2
             start_offset: 3,
             end_offset: 4,
             start_pos: Position { line: 1, column: 4 },
-            end_pos: Position { line: 1, column: 5 }
+            end_pos: Position { line: 1, column: 5 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(3, s.offset(&Position { line: 1, column: 4 }));
@@ -1691,7 +1919,9 @@ c = 1 + 2
             start_offset: 5,
             end_offset: 24,
             start_pos: Position { line: 1, column: 6 },
-            end_pos: Position { line: 3, column: 2 }
+            end_pos: Position { line: 3, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(5, s.offset(&Position { line: 1, column: 6 }));
@@ -1704,7 +1934,9 @@ c = 1 + 2
             start_offset: 38,
             end_offset: 39,
             start_pos: Position { line: 7, column: 1 },
-            end_pos: Position { line: 7, column: 2 }
+            end_pos: Position { line: 7, column: 2 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(38, s.offset(&Position { line: 7, column: 1 }));
@@ -1716,7 +1948,9 @@ c = 1 + 2
             start_offset: 40,
             end_offset: 41,
             start_pos: Position { line: 7, column: 3 },
-            end_pos: Position { line: 7, column: 4 }
+            end_pos: Position { line: 7, column: 4 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(40, s.offset(&Position { line: 7, column: 3 }));
@@ -1728,7 +1962,9 @@ c = 1 + 2
             start_offset: 42,
             end_offset: 43,
             start_pos: Position { line: 7, column: 5 },
-            end_pos: Position { line: 7, column: 6 }
+            end_pos: Position { line: 7, column: 6 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(42, s.offset(&Position { line: 7, column: 5 }));
@@ -1740,7 +1976,9 @@ c = 1 + 2
             start_offset: 44,
             end_offset: 45,
             start_pos: Position { line: 7, column: 7 },
-            end_pos: Position { line: 7, column: 8 }
+            end_pos: Position { line: 7, column: 8 },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(44, s.offset(&Position { line: 7, column: 7 }));
@@ -1755,7 +1993,9 @@ c = 1 + 2
             end_pos: Position {
                 line: 7,
                 column: 10
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(46, s.offset(&Position { line: 7, column: 9 }));
@@ -1773,7 +2013,9 @@ c = 1 + 2
             end_pos: Position {
                 line: 12,
                 column: 1
-            }
+            },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
     );
     assert_eq!(

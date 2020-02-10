@@ -38,6 +38,8 @@ pub struct Token {
     pub end_offset: u32,
     pub start_pos: Position,
     pub end_pos: Position,
+    pub left_ignore: Vec<Token>,
+    pub right_ignore: Vec<Token>,
 }
 
 impl Scanner {
@@ -62,14 +64,30 @@ impl Scanner {
         }
     }
 
+    fn collect_comments(&mut self) -> Vec<Token> {
+        let mut v = Vec::<Token>::new();
+        while let Some(t) = self._scan_with_stop(3) {
+            v.push( t );
+        }
+        return v;
+    }
+
+    fn scan_with_ignore(&mut self, mode: i32) -> Token {
+        let left_ignore = self.collect_comments();
+        let mut t = self._scan(mode);
+        t.left_ignore = left_ignore;
+        t.right_ignore = self.collect_comments();
+        return t;
+    }
+
     // scan produces the next token from the input.
     pub fn scan(&mut self) -> Token {
-        self._scan(0)
+        self.scan_with_ignore(0)
     }
 
     // scan_with_regex produces the next token from the input accounting for regex.
     pub fn scan_with_regex(&mut self) -> Token {
-        self._scan(1)
+        self.scan_with_ignore(1)
     }
 
     // scan_string_expr produces the next token from the input in a string expression.
@@ -107,7 +125,87 @@ impl Scanner {
                 line: self.cur_line,
                 column,
             },
+            left_ignore: Vec::<Token>::new(),
+            right_ignore: Vec::<Token>::new(),
         }
+    }
+
+    fn _scan_with_stop(&mut self, mode: i32) -> Option<Token> {
+        if self.p == self.eof {
+            return None;
+        }
+
+        // Save our state in case we need to unread
+        self.checkpoint = self.p;
+        self.checkpoint_line = self.cur_line;
+        self.checkpoint_last_newline = self.last_newline;
+
+        let mut token_start = 0 as u32;
+        let mut token_start_line = 0 as u32;
+        let mut token_start_col = 0 as u32;
+        let mut token_end = 0 as u32;
+        let mut token_end_line = 0 as u32;
+        let mut token_end_col = 0 as u32;
+
+        let error = unsafe {
+            scan(
+                mode,
+                &mut self.p as *mut *const CChar,
+                self.ps as *const CChar,
+                self.pe as *const CChar,
+                self.eof as *const CChar,
+                &mut self.last_newline as *mut *const CChar,
+                &mut self.cur_line as *mut u32,
+                &mut self.token as *mut u32,
+                &mut token_start as *mut u32,
+                &mut token_start_line as *mut u32,
+                &mut token_start_col as *mut u32,
+                &mut token_end as *mut u32,
+                &mut token_end_line as *mut u32,
+                &mut token_end_col as *mut u32,
+            )
+        };
+
+        let t = if error != 0 {
+            self.unread();
+            return None
+        } else if self.token == TOK_ILLEGAL && self.p == self.eof {
+            self.unread();
+            return None
+        } else if self.token == TOK_STOP {
+            self.unread();
+            return None
+        } else {
+            // No error or EOF, we can process the returned values normally.
+            let lit = unsafe {
+                str::from_utf8_unchecked(
+                    &self.data.as_bytes()[(token_start as usize)..(token_end as usize)],
+                )
+            };
+            Token {
+                tok: self.token,
+                lit: String::from(lit),
+                start_offset: token_start,
+                end_offset: token_end,
+                start_pos: Position {
+                    line: token_start_line,
+                    column: token_start_col,
+                },
+                end_pos: Position {
+                    line: token_end_line,
+                    column: token_end_col,
+                },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
+            }
+        };
+
+        // Record mapping from position to offset so clients
+        // may later go from position to offset by calling offset()
+        self.positions.insert(t.start_pos.clone(), t.start_offset);
+        self.positions.insert(t.end_pos.clone(), t.end_offset);
+
+        Some(t)
     }
 
     fn _scan(&mut self, mode: i32) -> Token {
@@ -172,6 +270,8 @@ impl Scanner {
                             line: token_start_line,
                             column: token_start_col + size as u32,
                         },
+                        left_ignore: Vec::<Token>::new(),
+                        right_ignore: Vec::<Token>::new(),
                     }
                 }
                 // This should be impossible as we would have produced an EOF token
@@ -202,6 +302,8 @@ impl Scanner {
                     line: token_end_line,
                     column: token_end_col,
                 },
+                left_ignore: Vec::<Token>::new(),
+                right_ignore: Vec::<Token>::new(),
             }
         };
 
