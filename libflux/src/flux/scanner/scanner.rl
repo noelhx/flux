@@ -74,13 +74,6 @@
         any => { fhold; fgoto main; };
     *|;
 
-	ignore_tokens_only := |*
-        whitespace;
-        newline => advance_line_between_tokens;
-        single_line_comment => { tok = COMMENT; fbreak; };
-		any => { tok = STOP; fbreak; };
-	*|;
-
     # This machine does not contain the regex literal.
     main := |*
         single_line_comment => { tok = COMMENT; fbreak; };
@@ -178,9 +171,6 @@ int scan(
         break;
     case 2:
         cs = flux_en_string_expr;
-        break;
-    case 3:
-        cs = flux_en_ignore_tokens_only;
         break;
     }
     const unsigned char *p = *pp;

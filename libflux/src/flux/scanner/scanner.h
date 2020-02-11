@@ -64,8 +64,6 @@ enum TOK {
     QUOTE                         = 52,
     STRINGEXPR                    = 53,
     TEXT                          = 54,
-
-    STOP                          = 55,
 };
 
 #define WASM_EXPORT __attribute__ ((visibility("default")))
