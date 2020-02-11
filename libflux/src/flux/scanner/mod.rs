@@ -71,7 +71,7 @@ impl Scanner {
             reversed = Some(boxed_head);
             head = next;
         }
-        return reversed;
+        reversed
     }
 
     fn scan_with_ignore(&mut self, mode: i32) -> Token {
@@ -87,7 +87,7 @@ impl Scanner {
                 break;
             }
         }
-        return token;
+        token
     }
 
     // scan produces the next token from the input.
