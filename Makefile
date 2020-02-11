@@ -110,11 +110,11 @@ FIX_DEPS = -e "s@${CURDIR}/@@g" -e "s@debug/debug@debug@g" -e "s@\\.dylib@.a@g" 
 # makes it so that if any file disappears from the build or is renamed, the
 # make does not fail. Rather, the .a target is re-run, which will then cause
 # the dependencies to be rebuilt on the following make invocation.
-ADD_TARGS = -e 'p' -e 's/^.*: *//' -e 's/ /:\n/g' -e 's/$$/:/'
+ADD_TARGS = '{ print $$0; for ( i = 2; i <= NF; i++ ) { print $$i ":"; }}'
 
 libflux/target/debug/libflux.deps: libflux/target/debug/libflux.d
-	@if [ -e "$<" ]; then \
-		sed $(FIX_DEPS) $< | sed $(ADD_TARGS) > $@; \
+	if [ -e "$<" ]; then \
+		sed $(FIX_DEPS) $< | awk $(ADD_TARGS) > $@; \
 	fi
 
 libflux/target/debug/liblibstd.deps: libflux/target/debug/liblibstd.d
