@@ -63,7 +63,7 @@ impl Scanner {
         }
     }
 
-    fn reverse( &self, mut head: Option<Box<Token>> ) -> Option<Box<Token>> {
+    fn reverse(&self, mut head: Option<Box<Token>>) -> Option<Box<Token>> {
         let mut reversed = None;
         while let Some(mut boxed_head) = head {
             let next = (*boxed_head).comment.take();
@@ -78,16 +78,15 @@ impl Scanner {
         let mut comment = None;
         let mut token;
         loop {
-            token = self._scan( mode );
+            token = self._scan(mode);
             if token.tok == TOK_COMMENT {
                 token.comment = comment.take();
                 comment = Some(Box::new(token));
-            }
-            else {
-                token.comment =  self.reverse(comment);
+            } else {
+                token.comment = self.reverse(comment);
                 break;
             }
-        };
+        }
         return token;
     }
 

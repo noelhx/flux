@@ -1290,7 +1290,7 @@ a
             end_offset: 23,
             start_pos: Position { line: 2, column: 1 },
             end_pos: Position { line: 2, column: 2 },
-            comment: Some( Box::new( Token {
+            comment: Some(Box::new(Token {
                 tok: 2,
                 lit: String::from("// this is a comment.\n"),
                 start_offset: 0,
@@ -1310,21 +1310,21 @@ a
             end_offset: 96,
             start_pos: Position { line: 6, column: 1 },
             end_pos: Position { line: 6, column: 2 },
-            comment: Some( Box::new( Token {
+            comment: Some(Box::new(Token {
                 tok: 2,
                 lit: String::from("// comment with // nested comment.\n"),
                 start_offset: 24,
                 end_offset: 59,
                 start_pos: Position { line: 3, column: 1 },
                 end_pos: Position { line: 4, column: 1 },
-                comment: Some( Box::new( Token {
+                comment: Some(Box::new(Token {
                     tok: 2,
                     lit: String::from("// one more.\n"),
                     start_offset: 59,
                     end_offset: 72,
                     start_pos: Position { line: 4, column: 1 },
                     end_pos: Position { line: 5, column: 1 },
-                    comment: Some( Box::new( Token {
+                    comment: Some(Box::new(Token {
                         tok: 2,
                         lit: String::from("// last but not least.\n"),
                         start_offset: 72,
@@ -1352,13 +1352,16 @@ a
                 line: 7,
                 column: 18
             },
-            comment: Some( Box::new( Token {
+            comment: Some(Box::new(Token {
                 tok: 2,
                 lit: String::from("// ok, that\'s it."),
                 start_offset: 97,
                 end_offset: 114,
                 start_pos: Position { line: 7, column: 1 },
-                end_pos: Position { line: 7, column: 18 },
+                end_pos: Position {
+                    line: 7,
+                    column: 18
+                },
                 comment: None
             }))
         }
@@ -1376,7 +1379,7 @@ a
             end_offset: 23,
             start_pos: Position { line: 2, column: 1 },
             end_pos: Position { line: 2, column: 2 },
-            comment: Some( Box::new( Token {
+            comment: Some(Box::new(Token {
                 tok: 2,
                 lit: String::from("// this is a comment.\n"),
                 start_offset: 0,
@@ -1396,21 +1399,21 @@ a
             end_offset: 96,
             start_pos: Position { line: 6, column: 1 },
             end_pos: Position { line: 6, column: 2 },
-            comment: Some( Box::new( Token {
+            comment: Some(Box::new(Token {
                 tok: 2,
                 lit: String::from("// comment with // nested comment.\n"),
                 start_offset: 24,
                 end_offset: 59,
                 start_pos: Position { line: 3, column: 1 },
                 end_pos: Position { line: 4, column: 1 },
-                comment: Some( Box::new( Token {
+                comment: Some(Box::new(Token {
                     tok: 2,
                     lit: String::from("// one more.\n"),
                     start_offset: 59,
                     end_offset: 72,
                     start_pos: Position { line: 4, column: 1 },
                     end_pos: Position { line: 5, column: 1 },
-                    comment: Some( Box::new( Token {
+                    comment: Some(Box::new(Token {
                         tok: 2,
                         lit: String::from("// last but not least.\n"),
                         start_offset: 72,
@@ -1438,13 +1441,16 @@ a
                 line: 7,
                 column: 18
             },
-            comment: Some( Box::new( Token {
+            comment: Some(Box::new(Token {
                 tok: 2,
                 lit: String::from("// ok, that\'s it."),
                 start_offset: 97,
                 end_offset: 114,
                 start_pos: Position { line: 7, column: 1 },
-                end_pos: Position { line: 7, column: 18 },
+                end_pos: Position {
+                    line: 7,
+                    column: 18
+                },
                 comment: None
             }))
         }
@@ -1641,7 +1647,6 @@ fn test_illegal() {
             start_pos: Position { line: 1, column: 7 },
             end_pos: Position { line: 1, column: 8 },
             comment: None,
-
         }
     );
     s.unread();
@@ -1900,7 +1905,7 @@ c = 1 + 2
             end_offset: 39,
             start_pos: Position { line: 7, column: 1 },
             end_pos: Position { line: 7, column: 2 },
-            comment: Some( Box::new( Token {
+            comment: Some(Box::new(Token {
                 tok: 2,
                 lit: String::from("// comment\n"),
                 start_offset: 26,
